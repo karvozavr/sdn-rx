@@ -67,6 +67,11 @@ public final class Functions {
 		return new FunctionInvocation(F_ID, symbolicName);
 	}
 
+	public static FunctionInvocation type(Relationship relationship) {
+
+		return new FunctionInvocation("type", relationship);
+	}
+
 	/**
 	 * Creates a function invocation for the {@code count()} function.
 	 * See <a href="https://neo4j.com/docs/cypher-manual/current/functions/aggregating/#functions-count">count</a>.

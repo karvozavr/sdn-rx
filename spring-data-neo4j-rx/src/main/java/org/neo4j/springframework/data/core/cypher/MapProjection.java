@@ -37,12 +37,29 @@ public class MapProjection implements Expression {
 
 	private MapExpression<?> map;
 
-	static MapProjection create(SymbolicName name, List<Object> content) {
-		return create(name, content.toArray());
-	}
-
 	static MapProjection create(SymbolicName name, Object... content) {
 
+		return new MapProjection(name, MapExpression.withEntries(createNewContent(content)));
+	}
+
+	MapProjection(SymbolicName name, MapExpression<?> map) {
+		this.name = name;
+		this.map = map;
+	}
+
+	public MapProjection andWith(Object... content) {
+		return new MapProjection(this.name, this.map.addEntries(createNewContent(content)));
+	}
+
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.enter(this);
+		this.name.accept(visitor);
+		this.map.accept(visitor);
+		visitor.leave(this);
+	}
+
+	private static List<MapEntry> createNewContent(Object... content) {
 		final List<MapEntry> newContent = new ArrayList<>(content.length);
 		final Set<String> knownKeys = new HashSet<>();
 
@@ -97,20 +114,6 @@ public class MapProjection implements Expression {
 			lastKey = null;
 			lastExpression = null;
 		}
-
-		return new MapProjection(name, MapExpression.withEntries(newContent));
-	}
-
-	public MapProjection(SymbolicName name, MapExpression<?> map) {
-		this.name = name;
-		this.map = map;
-	}
-
-	@Override
-	public void accept(Visitor visitor) {
-		visitor.enter(this);
-		this.name.accept(visitor);
-		this.map.accept(visitor);
-		visitor.leave(this);
+		return newContent;
 	}
 }

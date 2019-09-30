@@ -33,9 +33,18 @@ import org.neo4j.springframework.data.core.schema.Relationship.Direction;
 public interface RelationshipDescription {
 
 	/**
+	 * If this relationship is dynamic, than this method always returns the name of the inverse property.
+	 *
 	 * @return The type of this relationship
 	 */
 	String getType();
+
+	/**
+	 * A relationship is dynamic when it's modelled as a {@code Map<String, ?>}.
+	 *
+	 * @return True, if this relationship is dynamic
+	 */
+	boolean isDynamic();
 
 	/**
 	 * The source of this relationship is described by the primary label of the node in question.

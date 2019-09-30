@@ -349,13 +349,26 @@ public final class CypherAdapterUtils {
 				Node endNode = node(targetLabel).named(fieldName);
 				NodeDescription<?> endNodeDescription = schema.getNodeDescription(targetLabel);
 
-				Relationship relationship = relationshipDescription.isOutgoing()
-					? startNode.relationshipTo(endNode, relationshipType)
-					: startNode.relationshipFrom(endNode, relationshipType);
+				if(relationshipDescription.isDynamic()) {
+					Relationship relationship = relationshipDescription.isOutgoing()
+						? startNode.relationshipTo(endNode)
+						: startNode.relationshipFrom(endNode);
+					relationship = relationship.named(relationshipTargetName);
 
-				generatedLists.add(relationshipTargetName);
-				generatedLists.add(listBasedOn(relationship)
-					.returning(projectAllPropertiesAndRelationships(endNodeDescription, fieldName)));
+					generatedLists.add(relationshipTargetName);
+					generatedLists.add(listBasedOn(relationship)
+						.returning(
+							projectAllPropertiesAndRelationships(endNodeDescription, fieldName)
+								.andWith(NAME_OF_RELATIONSHIP_TYPE, Functions.type(relationship))));
+				} else {
+					Relationship relationship = relationshipDescription.isOutgoing()
+						? startNode.relationshipTo(endNode, relationshipType)
+						: startNode.relationshipFrom(endNode, relationshipType);
+
+					generatedLists.add(relationshipTargetName);
+					generatedLists.add(listBasedOn(relationship)
+						.returning(projectAllPropertiesAndRelationships(endNodeDescription, fieldName)));
+				}
 			}
 
 			return generatedLists;

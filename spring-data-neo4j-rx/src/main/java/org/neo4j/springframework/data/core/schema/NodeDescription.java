@@ -37,6 +37,7 @@ public interface NodeDescription<T> {
 
 	String NAME_OF_ROOT_NODE = "n";
 	String NAME_OF_INTERNAL_ID = "__internalNeo4jId__";
+	String NAME_OF_RELATIONSHIP_TYPE = "__relationshipType__";
 	String NAME_OF_IDS_RESULT = "__ids__";
 	String NAME_OF_ID_PARAM = "__id__";
 	String NAME_OF_PROPERTIES_PARAM = "__properties__";
